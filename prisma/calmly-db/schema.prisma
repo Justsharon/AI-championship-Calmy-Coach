@@ -1,0 +1,80 @@
+generator kysely {
+  provider = "prisma-kysely"
+
+  // Optionally provide a destination directory for the generated file
+  // and a filename of your choice
+  output       = "../../src/db/calmlyDb"
+  fileName     = "types.ts"
+  // Optionally generate runtime enums to a separate file
+  enumFileName = "enums.ts"
+  readOnlyIds  = true
+}
+
+datasource db {
+  provider = "sqlite"
+  // url must be set even though it is unused under the driverAdapters pattern
+  url      = "https://example.com/non-existant-database/required-but-unused-variable"
+}
+
+model User {
+  id            String   @id
+  email         String?  @unique
+  workosUserId  String?  @unique @map("workos_user_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  preferences   UserPreferences?
+  interactions  Interaction[]
+  apiKeys       ApiKey[]
+
+  @@map("users")
+}
+
+model UserPreferences {
+  id                    String   @id
+  userId                String   @unique @map("user_id")
+  preferredTone         String?  @default("balanced") @map("preferred_tone")
+  defaultAssertiveness  Int?     @default(5) @map("default_assertiveness")
+  voiceEnabled          Boolean  @default(false) @map("voice_enabled")
+  elevenlabsVoiceId     String?  @map("elevenlabs_voice_id")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model Interaction {
+  id                    String   @id
+  userId                String   @map("user_id")
+  situationDescription  String   @map("situation_description")
+  detectedContext       String?  @map("detected_context")
+  selectedResponse      String?  @map("selected_response")
+  selectedTone          String?  @map("selected_tone")
+  refinementCount       Int      @default(0) @map("refinement_count")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([detectedContext])
+  @@map("interactions")
+}
+
+model ApiKey {
+  id          String    @id
+  userId      String    @map("user_id")
+  keyHash     String    @unique @map("key_hash")
+  name        String?
+  lastUsedAt  DateTime? @map("last_used_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  expiresAt   DateTime? @map("expires_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
+  @@map("api_keys")
+}

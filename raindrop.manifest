@@ -1,0 +1,29 @@
+application "calmly-coach" {
+
+  service "api-gateway" {
+    visibility = "public"
+  }
+
+  service "coaching-engine" {
+    visibility = "private"
+  }
+
+  mcp_service "calmly-mcp" {
+    visibility = "public"
+  }
+
+  observer "interaction-recorder" {
+    source {
+      queue = "interaction-queue"
+    }
+  }
+
+  smartmemory "user-memory" {}
+
+  smartbucket "scenario-library" {}
+
+  sql_database "calmly-db" {}
+
+  queue "interaction-queue" {}
+
+}
