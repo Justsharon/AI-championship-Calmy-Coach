@@ -53,10 +53,10 @@ External Integrations:
   ├─ WorkOS (auth - optional)
   ├─ Stripe (payments - optional)
   ├─ ElevenLabs (voice synthesis - optional)
-  └─ Vultr (compute/database for AI inference)
+  └─ Vultr Managed PostgreSQL (production database)
 ```
 
-**Flow**: User submits situation → API Gateway validates → Coaching Engine analyzes context, retrieves user preferences from SmartMemory, searches similar scenarios in SmartBucket, generates responses via SmartInference → Returns 1-3 responses with explanations → User selects/refines → Interaction queued → Recorder stores in memory + SQL
+**Flow**: User submits situation → API Gateway validates → Coaching Engine analyzes context, retrieves user preferences from SmartMemory, searches similar scenarios in SmartBucket, generates responses via SmartInference → Returns 1-3 responses with explanations → User selects/refines → Interaction queued → Recorder stores in memory +  Vultr SQL database
 
 ---
 
@@ -472,56 +472,35 @@ await env.INTERACTION_QUEUE.send({
 
 ---
 
-## 4. Vultr Integration Plan
+### Vultr Integration
 
-### **Option A: Vultr Cloud Compute for AI Inference**
+**Production Database Infrastructure:**
 
-**Architecture:**
-- Deploy custom AI models (e.g., fine-tuned Llama) on Vultr GPU instances
-- Raindrop SmartInference calls Vultr endpoint for response generation
-- Reduces dependency on shared inference resources
+Calmly Coach uses **Vultr Managed PostgreSQL 16** for production data persistence:
 
-**Implementation:**
-```typescript
-// coaching-engine/index.ts
-async function generateResponsesViaVultr(situation: string, context: string) {
-  const response = await fetch(env.VULTR_INFERENCE_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.VULTR_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: 'llama-3.3-70b',
-      prompt: buildPrompt(situation, context),
-      max_tokens: 1000,
-      temperature: 0.7
-    })
-  });
-  return await response.json();
-}
-```
+**Configuration:**
+- **Service:** Managed Database - PostgreSQL 16
+- **Region:** Johannesburg
+- **Features:** Automatic daily backups, connection pooling (PgBouncer), SSL/TLS encryption, 99.99% SLA
+- **Monitoring:** Real-time CPU, memory, disk I/O, and connection metrics
 
-**Cost**: ~$0.50-2.00/hour for GPU instance (A4000/A5000)
+**Data Storage:**
+- User accounts and authentication
+- Interaction history for personalization
+- User preferences and settings
+- API key management (future)
 
----
+**Why Vultr:**
+- **Zero-ops management** - Automatic updates, backups, and monitoring
+- **Cost-effective scaling** - Start at $15/month, scale to enterprise
+- **Production SLA** - 99.99% uptime guarantee
+- **Developer experience** - One-click provisioning, web SQL console
 
-### **Option B: Vultr Managed Database**
-
-**Architecture:**
-- Host calmly-db on Vultr Managed PostgreSQL/MySQL
-- Improved latency for geographically distributed users
-- Automatic backups, scaling, monitoring
-
-**Implementation:**
-```typescript
-// raindrop.manifest
-sql_database "calmly-db" {
-  provider = "vultr"
-  instance = "managed-pg-1"
-  region = "ewr"  // New Jersey for low latency
-}
-```
+**Architecture Benefits:**
+- **Raindrop SmartMemory** handles real-time AI personalization and pattern learning
+- **Vultr PostgreSQL** provides durable storage and relational queries
+- **Hybrid approach** balances AI capabilities with production reliability
+- **Migration path** documented for seamless dev-to-production deployment
 
 **Connection:**
 ```typescript
