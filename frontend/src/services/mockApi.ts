@@ -1,187 +1,3 @@
-
-// // === Keyword extraction (lightweight semantic simulation) ===
-// const extractTopic = (s: string) => {
-//   if (s.includes('deadline') || s.includes('late')) return 'Project Management/Deadlines';
-//   if (s.includes('credit') || s.includes('recognition')) return 'Credit/Recognition for Contributions';
-//   if (s.includes('communication') || s.includes('ghosting')) return 'Interpersonal Communication Issues';
-//   if (s.includes('respect') || s.includes('boundary')) return 'Boundary Setting/Lack of Respect';
-//   if (s.includes('workload') || s.includes('unfair')) return 'Uneven Workloads/Fairness';
-//   if (s.includes('gossip') || s.includes('complaint')) return 'Workplace/Social Drama';
-//   if (s.includes('apology') || s.includes('sorry')) return 'Need to Apologize';
-//   return 'General Conflict/The Situation';
-// };
-
-// export const mockAnalyze = (situation: string) => {
-//   return new Promise(resolve => {
-//     setTimeout(() => {
-//       const s = situation.toLowerCase();
-//       const context =
-//         s.includes('work') || s.includes('manager') || s.includes('team')
-//           ? 'Professional/Work'
-//           : s.includes('friend') || s.includes('partner') || s.includes('family')
-//             ? 'Personal/Relationship'
-//             : 'Neutral/General';
-      
-//       const emotionalTone =
-//         s.includes('angry') || s.includes('furious')
-//           ? 'Angry/Need to De-escalate'
-//           : s.includes('hurt') || s.includes('sad')
-//             ? 'Hurt/Vulnerable'
-//             : context === 'Professional/Work'
-//               ? 'Frustrated but Professional'
-//               : 'Concerned but Caring';
-
-//       const userGoal =
-//         s.includes('stop') || s.includes('end')
-//           ? 'Set Firm Boundary'
-//           : s.includes('resolve') || s.includes('fix')
-//             ? 'Collaborative Problem-Solving'
-//             : s.includes('express') || s.includes('feel')
-//               ? 'Express Feelings/Gain Understanding'
-//               : 'Seek Clarification';
-
-//       resolve({
-//         context,
-//         confidence: 0.85,
-//         emotionalTone,
-//         userGoal, // New element: Crucial for guiding the advice
-//         keyElements: [
-//           context === 'Professional/Work' ? 'Workplace Dynamics' : 'Relationship Dynamics',
-//           'Communication Breakdown',
-//           extractTopic(situation) // Incorporate the refined topic
-//         ]
-//       });
-//     }, 600);
-//   });
-// };
-
-// // === SUGGEST MOCK ===
-// export const mockSuggest = (situation: string) => {
-//   return new Promise(resolve => {
-//     setTimeout(() => {
-//       const s = situation.toLowerCase();
-//       const topic = extractTopic(s);
-
-//       let responses;
-
-//       // ===== WORK CONTEXT =====
-//       if (s.includes('work') || s.includes('manager') || s.includes('team')) {
-//         responses = [
-//           {
-//             id: '1',
-//             tone: 'Professional',
-//             text: `I want to make sure we're aligned about ${topic}. Can we clarify expectations moving forward?`,
-//             explanation: 'Addresses structure and future alignment.'
-//           },
-//           {
-//             id: '2',
-//             tone: 'Direct but Fair',
-//             text: `I'm noticing recurring friction around ${topic}. Let’s address it so we avoid miscommunication.`,
-//             explanation: 'Acknowledges pattern and proposes resolution.'
-//           },
-//           {
-//             id: '3',
-//             tone: 'Neutral',
-//             text: `Could we sync briefly? I want to ensure we're on the same page regarding ${topic}.`,
-//             explanation: 'Low-friction, collaborative framing.'
-//           },
-//           {
-//             id: '4',
-//             tone: 'Firm & Objective',
-//             text: `I need a clear action plan for ${topic}. My capacity requires us to prioritize effectively moving forward.`,
-//             explanation: 'Uses objective language to set a boundary on workload/scope.'
-//           },
-//           {
-//             id: '5',
-//             tone: 'Collaborative & Proactive',
-//             text: `To prevent future issues with ${topic}, let's define a specific process for [Action, e.g., 'submitting changes'].`,
-//             explanation: 'Shifts focus from blame to process improvement.'
-//           },
-//         ];
-//       }
-
-//       // ===== FRIENDSHIP / RELATIONSHIP =====
-//       else if (
-//         s.includes('friend') ||
-//         s.includes('relationship') ||
-//         s.includes('partner') ||
-//         s.includes('family')
-//       ) {
-//         responses = [
-//           {
-//             id: '1',
-//             tone: 'Warm',
-//             text: `I care about us, and ${topic} has been on my mind. Can we talk it through?`,
-//             explanation: 'Balances honesty with care.'
-//           },
-//           {
-//             id: '2',
-//             tone: 'Soft but Clear',
-//             text: `I felt a bit uneasy about ${topic}. I'd like to understand each other better.`,
-//             explanation: 'Invites open dialogue.'
-//           },
-//           {
-//             id: '3',
-//             tone: 'Balanced',
-//             text: `Here’s what I experienced around ${topic}. What was it like on your side?`,
-//             explanation: 'Promotes reciprocal communication.'
-//           },
-//           {
-//             id: '4',
-//             tone: 'Vulnerable & Direct',
-//             text: `I felt [Emotion, e.g., 'ignored'] when ${topic}. I'd appreciate it if you could share your perspective on what happened.`,
-//             explanation: 'Uses "I" statements to own feelings and invite dialogue.'
-//           },
-//           {
-//             id: '5',
-//             tone: 'Gentle & Affirming',
-//             text: `This is important to me because I value our relationship. Can we find a time to talk more deeply about ${topic}?`,
-//             explanation: 'Affirms the relationship while signaling the importance of the issue.'
-//           },
-//         ];
-//       }
-
-//       // ===== UNKNOWN CONTEXT =====
-//       else {
-//         responses = [
-//           {
-//             id: '1',
-//             tone: 'Calm',
-//             text: `Can you share a bit more about ${topic}? I want to respond accurately.`,
-//             explanation: 'Clarifies missing context.'
-//           },
-//           {
-//             id: '2',
-//             tone: 'Reasoned',
-//             text: `Let’s break down what happened around ${topic} and figure out the best approach.`,
-//             explanation: 'Analytical framing.'
-//           },
-//           {
-//             id: '3',
-//             tone: 'Curious',
-//             text: `What’s the core outcome you’re aiming for regarding ${topic}?`,
-//             explanation: 'Guides toward negotiation.'
-//           }
-//         ];
-//       }
-
-//       // Add randomness to avoid repeated patterns
-//       responses = [...responses].sort(() => Math.random() - 0.5);
-
-//       resolve({ responses });
-//     }, 900);
-//   });
-// };
-
-// // === SAVE MOCK ===
-// export const mockSaveInteraction = () => {
-//   return Promise.resolve({
-//     interactionId: `int_${Date.now()}`,
-//     saved: true,
-//     queuedForProcessing: true
-//   });
-// };
-
 export const mockAnalyze = (situation: string) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -300,7 +116,7 @@ function generateContextualResponses(situation: string, context: string) {
   return responses;
 }
 
-function generateCalmResponse(context: string, situation: string, isConflict: boolean, needsAssertiveness: boolean): string {
+function generateCalmResponse(context: string, _situation: string, isConflict: boolean, needsAssertiveness: boolean): string {
   if (context === 'work') {
     if (needsAssertiveness) {
       return "I'd like to discuss something important. I want to make sure my contributions are properly recognized. Can we schedule time to talk about how we track project work?";
@@ -316,7 +132,7 @@ function generateCalmResponse(context: string, situation: string, isConflict: bo
   }
 }
 
-function generateEmpatheticResponse(context: string, situation: string, isConflict: boolean): string {
+function generateEmpatheticResponse(context: string, _situation: string, _isConflict: boolean): string {
   if (context === 'work') {
     return "I understand we're both under pressure. I'm feeling concerned about this situation, and I imagine you have your own perspective. I'd like to hear your thoughts.";
   } else if (context === 'friendship') {
@@ -326,7 +142,7 @@ function generateEmpatheticResponse(context: string, situation: string, isConfli
   }
 }
 
-function generateDirectResponse(context: string, situation: string, needsAssertiveness: boolean, isNeedsBoundary: boolean): string {
+function generateDirectResponse(context: string, _situation: string, needsAssertiveness: boolean, isNeedsBoundary: boolean): string {
   if (needsAssertiveness) {
     return "I need to address this directly: my contributions should be acknowledged. This is important to me, and I'd like us to establish a clearer system going forward.";
   }

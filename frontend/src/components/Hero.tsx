@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const Hero: React.FC = () => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600">

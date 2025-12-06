@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Hero } from './components/Hero';
 import { ScenarioInput } from './components/ScenarioInput';
 import { AnalysisDisplay } from './components/AnalysisDisplay';
 import { ResponseCard } from './components/ResponseCard';
 import { ErrorAlert } from './components/ErrorAlert';
 import { api } from './services/api';
-import type { AnalyzeResponse, GenerateResponse, TonePreference } from './types';
+import type { AnalyzeResponse, GenerateResponse } from './types';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function App() {
 
   const userId = 'demo_user_' + Math.random().toString(36).substring(7);
 
-  const handleSubmit = async (situation: string, tonePreference: TonePreference) => {
+  const handleSubmit = async (situation: string) => {
     setLoading(true);
     setError(null);
     setAnalysis(null);
@@ -41,7 +41,7 @@ function App() {
     }
   };
 
-  const handleSaveResponse = async (responseId: string, text: string, tone: string) => {
+  const handleSaveResponse = async ( text: string, tone: string) => {
     if (!analysis) return;
 
     setSaving(true);

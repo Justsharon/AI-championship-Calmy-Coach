@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 interface Props {
@@ -10,9 +9,9 @@ export const SemicircleGauge: React.FC<Props> = ({ value, size = 160 }) => {
   const radius = size / 2 - 10;
   const cx = size / 2;
   const cy = size / 2;
-  const circumference = Math.PI * radius;
+
   const progress = Math.max(0, Math.min(100, value));
-  const dash = (circumference * progress) / 100;
+
 
   return (
     <svg width={size} height={size / 2} viewBox={`0 0 ${size} ${size / 2}`}>
