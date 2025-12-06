@@ -27,7 +27,7 @@ export const ResponseGrid: React.FC<Props> = ({ data, onSave, saving }) => {
       }
       if (e.key === "Enter" && focusedIndex !== null) {
         const r = data.responses[focusedIndex];
-        onSave(r.id, r.text, r.tone);
+        onSave(r!.id, r!.text, r!.tone);
       }
     };
 

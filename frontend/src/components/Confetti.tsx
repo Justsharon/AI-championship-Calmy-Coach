@@ -31,7 +31,7 @@ export const Confetti: React.FC<ConfettiProps> = ({ trigger }) => {
       const size = Math.floor(Math.random() * 10) + 6;
       el.style.width = `${size}px`;
       el.style.height = `${size * 0.6}px`;
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.background = colors[Math.floor(Math.random() * colors.length)]!;
       el.style.position = "absolute";
       el.style.left = `${20 + Math.random() * 60}%`;
       el.style.top = `${40 + Math.random() * 20}%`;
