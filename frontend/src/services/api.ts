@@ -1,6 +1,6 @@
 import { mockAnalyze, mockSuggest, mockSaveInteraction } from './mockApi';
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'false';
+const USE_MOCK = import.meta.env.VITE_USE_MOCK;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 export const analyzeScenario = async (situation: string, userId?: string) => {
